@@ -17,7 +17,7 @@
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-name=RAKwireless RUI STM32 Modules
+name=RAKwireless RUI STM32 Modules - WiRoc
 
 # Compile variables
 # -----------------
@@ -172,4 +172,4 @@ tools.bootburn.bootloader.pattern={program.burn_pattern}
 tools.bootburn.erase.params.verbose=
 tools.bootburn.erase.params.quiet=
 tools.bootburn.erase.pattern=
-version=4.2.4
+version=4.2.4-wiroc

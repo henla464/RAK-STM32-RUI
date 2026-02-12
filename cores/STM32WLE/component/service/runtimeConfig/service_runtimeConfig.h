@@ -23,6 +23,10 @@ typedef struct runtimeConfigP2P_s {
     uint8_t coding_rate;
     uint16_t preamble_length;
     uint8_t txpower;
+    bool low_data_rate_optimize;
+    bool crc_on;
+    uint8_t payload_len;
+    bool fix_length_payload;
 } runtimeConfigP2P_t;
 
 bool get_useRuntimeConfigP2P(void);

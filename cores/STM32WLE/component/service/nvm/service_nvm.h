@@ -124,6 +124,9 @@ typedef struct{
 typedef struct {
 #ifndef NO_LORA_SUPPORT
     bool iqinverted;
+    bool low_datarate_optimize;
+    bool crc_on;
+    uint8_t payloadlen;
     uint32_t symbol_timeout;
     uint16_t syncword;
     uint8_t syncword_dirty_byte;
@@ -481,6 +484,10 @@ uint8_t service_nvm_get_codingrate_from_nvm (void);
 
 int32_t service_nvm_set_codingrate_to_nvm (uint8_t codingrate);
 
+uint16_t service_nvm_get_payloadlen_from_nvm (void);
+
+int32_t service_nvm_set_payloadlen_to_nvm (uint16_t payloadlen);
+
 uint16_t service_nvm_get_preamlen_from_nvm (void);
 
 int32_t service_nvm_set_preamlen_to_nvm (uint16_t preamlen);
@@ -505,13 +512,21 @@ bool service_nvm_get_iqinverted_from_nvm(void);
 
 int32_t service_nvm_set_iqinverted_to_nvm(bool iqinverted);
 
-uint32_t service_nvm_get_symbol_timeout_from_nvm(void);
+bool service_nvm_get_low_datarate_optimize_from_nvm(void);
 
-int32_t service_nvm_set_symbol_timeout_to_nvm(uint32_t symbol_timeout);
+uint32_t service_nvm_set_low_datarate_optimize_to_nvm(bool low_datarate_optimize);
+
+bool service_nvm_get_crc_on_from_nvm(void);
+         
+uint32_t service_nvm_set_crc_on_to_nvm(bool crc_on);
 
 bool service_nvm_get_fix_length_payload_from_nvm(void);
 
 int32_t service_nvm_set_fix_length_payload_to_nvm(bool enable);
+
+uint32_t service_nvm_get_symbol_timeout_from_nvm(void);
+
+int32_t service_nvm_set_symbol_timeout_to_nvm(uint32_t symbol_timeout);
 
 uint16_t service_nvm_get_syncword_from_nvm(void);
 

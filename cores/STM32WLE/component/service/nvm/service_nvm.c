@@ -1298,6 +1298,38 @@ int32_t service_nvm_set_iqinverted_to_nvm(bool iqinverted)
     return udrv_flash_write(SERVICE_NVM_RUI_CONFIG_NVM_ADDR, sizeof(PRE_rui_cfg_t), (uint8_t *)&g_rui_cfg_t);
 }
 
+bool service_nvm_get_low_datarate_optimize_from_nvm(void)
+{
+    return g_rui_cfg_t.g_rui_cfg_ex.low_datarate_optimize;
+}
+
+uint32_t service_nvm_set_low_datarate_optimize_to_nvm(bool low_datarate_optimize)
+{
+    g_rui_cfg_t.g_rui_cfg_ex.low_datarate_optimize = low_datarate_optimize;
+    return udrv_flash_write(SERVICE_NVM_RUI_CONFIG_NVM_ADDR, sizeof(PRE_rui_cfg_t), (uint8_t *)&g_rui_cfg_t);
+}
+
+bool service_nvm_get_crc_on_from_nvm(void)
+{
+    return g_rui_cfg_t.g_rui_cfg_ex.crc_on;
+}
+         
+uint32_t service_nvm_set_crc_on_to_nvm(bool crc_on)
+{
+    g_rui_cfg_t.g_rui_cfg_ex.crc_on = crc_on;
+    return udrv_flash_write(SERVICE_NVM_RUI_CONFIG_NVM_ADDR, sizeof(PRE_rui_cfg_t), (uint8_t *)&g_rui_cfg_t);
+}
+
+uint16_t service_nvm_get_payloadlen_from_nvm (void) {
+    return g_rui_cfg_t.g_rui_cfg_ex.payloadlen;
+}
+
+int32_t service_nvm_set_payloadlen_to_nvm (uint16_t payloadlen) {
+    g_rui_cfg_t.g_rui_cfg_ex.payloadlen = payloadlen;
+
+    return udrv_flash_write(SERVICE_NVM_RUI_CONFIG_NVM_ADDR, sizeof(PRE_rui_cfg_t), (uint8_t *)&g_rui_cfg_t);
+}
+
 uint32_t service_nvm_get_symbol_timeout_from_nvm(void)
 {
     return g_rui_cfg_t.g_rui_cfg_ex.symbol_timeout;

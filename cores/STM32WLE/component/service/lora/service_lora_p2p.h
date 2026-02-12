@@ -85,6 +85,7 @@ typedef struct {
     bool isContinue_no_exit;
     bool isContinue_compatible_tx;
     volatile bool isCAD;
+    volatile bool isCADDone;
 }LORA_P2P_STATUS_ST;
 
 typedef struct rui_lora_p2p_revc
@@ -208,6 +209,18 @@ bool service_lora_p2p_get_public_network(void);
 
 int32_t service_lora_p2p_set_public_network(bool enable);
 
+bool service_lora_p2p_get_low_datarate_optimize(void);
+
+int32_t service_lora_p2p_set_low_datarate_optimize(bool lowDatarateOptimize);
+
+bool service_lora_p2p_get_crcon(void);
+
+int32_t service_lora_p2p_set_crcon(bool crcon);
+
+uint8_t service_lora_p2p_get_payloadlen(void);
+
+int32_t service_lora_p2p_set_payloadlen(uint8_t payloadlen);
+
 uint32_t service_lora_p2p_get_symbol_timeout(void);
 
 int32_t service_lora_p2p_set_symbol_timeout(uint32_t symbol_timeout);
@@ -230,6 +243,9 @@ int32_t service_lora_p2p_set_CAD(bool enable);
 
 bool service_lora_p2p_get_radio_stat(void);
 
+int32_t service_lora_p2p_config2(void);
+
+int32_t service_lora_p2p_send2(uint8_t *p_data, uint8_t len, bool cad_enable);
 
 #ifdef __cplusplus
 }

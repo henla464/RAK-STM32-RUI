@@ -499,4 +499,84 @@ bool RAKLoraP2P::registerPSendCADCallback(service_lora_p2p_send_CAD_cb_type call
 }
 
 
+
+c_psend_return_status_type_t RAKLoraP2P::c_psend(uint8_t length, uint8_t *payload,bool cad_enable) {
+    if (SERVICE_LORAWAN == service_lora_p2p_get_nwm())
+    {
+        return SEND_FAILED;
+    }
+
+    if ((true == service_lora_p2p_get_crypto_enable()) && (length > 223))
+    {
+        return SEND_FAILED;
+    }
+    else if (length > 253)
+    {
+        return SEND_FAILED;
+    }
+
+    uint32_t send_status = service_lora_p2p_send(payload, length, cad_enable);
+
+    if (send_status == UDRV_RETURN_OK) {
+        return SENT_OK;
+    } else if (send_status == -UDRV_BUSY) {
+        return CAD_DETECTED_BUSY;
+    }
+
+    return SEND_FAILED;
+}
+
+bool RAKLoraP2P::lowDataRateOptimize::get() {
+    return service_lora_p2p_get_low_datarate_optimize();
+}
+
+bool RAKLoraP2P::lowDataRateOptimize::set(bool low_datarate_optimize) {
+    if (SERVICE_LORAWAN == service_lora_p2p_get_nwm())
+    {
+        return false;
+    }
+
+    if (service_lora_p2p_set_low_datarate_optimize(low_datarate_optimize) == UDRV_RETURN_OK) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+bool RAKLoraP2P::crc::get() {
+    return service_lora_p2p_get_crcon();
+}
+
+bool RAKLoraP2P::crc::set(bool crc_on) {
+    if (SERVICE_LORAWAN == service_lora_p2p_get_nwm())
+    {
+        return false;
+    }
+
+    if (service_lora_p2p_set_crcon(crc_on) == UDRV_RETURN_OK) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+
+uint8_t RAKLoraP2P::payloadLength::get()
+{
+    return service_lora_p2p_get_payloadlen();
+}
+bool RAKLoraP2P::payloadLength::set(uint8_t length)
+{
+    if (SERVICE_LORAWAN == service_lora_p2p_get_nwm())
+    {
+        return false;
+    }
+
+    if (service_lora_p2p_set_payloadlen(length) == UDRV_RETURN_OK) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 #endif

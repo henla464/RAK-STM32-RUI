@@ -14,6 +14,12 @@
 #include "service_battery.h"
 #include "service_lora_arssi.h"
 
+typedef enum
+{
+    SENT_OK = 0,
+    CAD_DETECTED_BUSY = 1,
+    SEND_FAILED = 2
+} c_psend_return_status_type_t;
 
 class RAKLoraP2P
 {
@@ -2009,6 +2015,243 @@ public:
   pfdev pfdev;
   nwm nwm;
 
+
+  /*******************************************************************************/
+  /*  WiRoc Custom Methods */
+  /*******************************************************************************/
+
+  /**@par   Description
+     *      This api provides the way to P2P send data
+     *
+     * @ingroup P2P
+     * @par Syntax
+     *      api.lora.c_psend(length, payload,cad_enable)
+     *
+     * @param   length      the length of the payload
+     * @param   payload     the data send to the other device
+     * @param   bool        Channel Activity Detection enable
+     * @return  bool
+     * @retval  TRUE for sending data success
+     * @retval  FALSE for sending data failure
+     * @par         Example
+     * @verbatim
+       void setup()
+       {
+           Serial.begin(115200);
+
+           Serial.println("P2P Start");
+
+           Serial.printf("Set Node device work mode %s\r\n", api.lora.nwm.set() ? "Success" : "Fail");
+           Serial.printf("Set P2P mode frequency %s\r\n", api.lora.pfreq.set(868000000) ? "Success" : "Fail");
+           Serial.printf("Set P2P mode spreading factor %s\r\n", api.lora.psf.set(12) ? "Success" : "Fail");
+           Serial.printf("Set P2P mode bandwidth %s\r\n", api.lora.pbw.set(125) ? "Success" : "Fail");
+           Serial.printf("Set P2P mode code rate %s\r\n", api.lora.pcr.set(0) ? "Success" : "Fail");
+           Serial.printf("Set P2P mode preamble length %s\r\n", api.lora.ppl.set(8) ? "Success" : "Fail");
+           Serial.printf("Set P2P mode tx power %s\r\n", api.lora.ptp.set(22) ? "Success" : "Fail");
+       }
+
+       void loop()
+       {
+           uint8_t payload[] = "payload";
+           Serial.printf("P2P send %s\r\n", api.lora.c_psend(sizeof(payload), payload,true) == SENT_OK ? "Success" : "Fail");
+           Serial.printf("P2P send %s\r\n", api.lora.c_psend(sizeof(payload), payload,true) == CAD_DETECTED_BUSY ? "CAD Detected Busy" : "Other return value");
+           delay(5000);
+       }
+
+           @endverbatim
+     */
+  c_psend_return_status_type_t c_psend(uint8_t length, uint8_t *payload,bool cad_enable);
+
+  class lowDataRateOptimize
+  {
+  public:
+    /**@par	Description
+	 *     	This api allows to get P2P Low data rate optimization
+	 *
+	 * @par	Syntax
+	 *	api.lora.lowDataRateOptimize.get()
+	 *
+	 * @return  The Low data rate optimization value (true/false) 	
+	 * @par         Example
+         * @verbatim
+       void setup()
+       {
+           Serial.begin(115200);
+
+           Serial.printf("Set Node device work mode %s\r\n", api.lora.nwm.set() ? "Success" : "Fail");
+           Serial.printf("Set P2P mode low data rate optimization %s\r\n", api.lora.lowDataRateOptimize.set(true) ? "Success" : "Fail");
+       }
+
+       void loop()
+       {
+           Serial.printf("P2P mode low data rate optimization = %d\r\n", api.lora.lowDataRateOptimize.get());
+
+           delay(1000);
+       }
+
+           @endverbatim
+	 */
+    bool get();
+    /**@par	Description
+	 *     	This api allows to set P2P Low data rate optimization
+	 *
+	 * @par	Syntax
+	 *	api.lora.lowDataRateOptimize.set(value)
+	 *
+	 * @param	value	the P2P low data rate optimization value (true/false)
+   * @return	bool
+	 * @retval	TRUE for setting P2P low data rate optimization success
+	 * @retval	FALSE for setting low data rate optimization failure
+	 * @par         Example
+         * @verbatim
+       void setup()
+       {
+           Serial.begin(115200);
+
+           Serial.printf("Set Node device work mode %s\r\n", api.lora.nwm.set() ? "Success" : "Fail");
+           Serial.printf("Set P2P mode low data rate optimization %s\r\n", api.lora.lowDataRateOptimize.set(true) ? "Success" : "Fail");
+       }
+
+       void loop()
+       {
+           Serial.printf("P2P mode low data rate optimization = %d\r\n", api.lora.lowDataRateOptimize.get());
+
+           delay(1000);
+       }
+
+           @endverbatim
+	 */
+    bool set(bool lowDataRateOptimize);
+  };
+
+  class crc
+  {
+  public:
+    /**@par	Description
+	 *     	This api allows to get P2P CRC
+	 *
+	 * @par	Syntax
+	 *	api.lora.crc.get()
+	 *
+	 * @return  The CRC value (true/false) 	
+
+	 * @par         Example
+         * @verbatim
+       void setup()
+       {
+           Serial.begin(115200);
+
+           Serial.printf("Set Node device work mode %s\r\n", api.lora.nwm.set() ? "Success" : "Fail");
+           Serial.printf("Set P2P mode CRC %s\r\n", api.lora.crc.set(true) ? "Success" : "Fail");
+       }
+
+       void loop()
+       {
+           Serial.printf("P2P mode CRC = %d\r\n", api.lora.crc.get());
+
+           delay(1000);
+       }
+
+           @endverbatim
+	 */
+    bool get();
+    /**@par	Description
+	 *     	This api allows to set P2P CRC
+	 *
+	 * @par	Syntax
+	 *	api.lora.crc.set(value)
+	 *
+	 * @param	value	the P2P CRC value (true/false)
+   * @return	bool
+	 * @retval	TRUE for setting P2P CRC success
+	 * @retval	FALSE for setting CRC failure
+	 * @par         Example
+         * @verbatim
+       void setup()
+       {
+           Serial.begin(115200);
+
+           Serial.printf("Set Node device work mode %s\r\n", api.lora.nwm.set() ? "Success" : "Fail");
+           Serial.printf("Set P2P mode CRC %s\r\n", api.lora.crc.set(true) ? "Success" : "Fail");
+       }
+
+       void loop()
+       {
+           Serial.printf("P2P mode CRC = %d\r\n", api.lora.crc.get());
+
+           delay(1000);
+       }
+
+           @endverbatim
+	 */
+    bool set(bool crc_on);
+  };
+
+  class payloadLength
+  {
+  public:
+    /**@par	Description
+	 *     	This api allows to get P2P Payload Length
+	 *
+	 * @par	Syntax
+	 *	api.lora.payloadLength.get()
+	 *
+	 * @return  The Payload length 	
+	 * @par         Example
+         * @verbatim
+       void setup()
+       {
+           Serial.begin(115200);
+
+           Serial.printf("Set Node device work mode %s\r\n", api.lora.nwm.set() ? "Success" : "Fail");
+           Serial.printf("Set P2P mode payload length %s\r\n", api.lora.payloadLength.set(8) ? "Success" : "Fail");
+       }
+
+       void loop()
+       {
+           Serial.printf("P2P mode payload length = %d\r\n", api.lora.payloadLength.get());
+
+           delay(1000);
+       }
+
+           @endverbatim
+	 */
+    uint8_t get();
+    /**@par	Description
+	 *     	This api allows to set P2P Payload Length (0-255)
+	 *
+	 * @par	Syntax
+	 *	api.lora.payloadLength.set(length)
+	 *
+	 * @param	value	the P2P payload length(0-255)
+   * @return	bool
+	 * @retval	TRUE for setting P2P payload length success
+	 * @retval	FALSE for setting payload length failure
+	 * @par         Example
+         * @verbatim
+       void setup()
+       {
+           Serial.begin(115200);
+
+           Serial.printf("Set Node device work mode %s\r\n", api.lora.nwm.set() ? "Success" : "Fail");
+           Serial.printf("Set P2P mode payload length %s\r\n", api.lora.payloadLength.set(8) ? "Success" : "Fail");
+       }
+
+       void loop()
+       {
+           Serial.printf("P2P mode payload length = %d\r\n", api.lora.payloadLength.get());
+
+           delay(1000);
+       }
+
+           @endverbatim
+	 */
+    bool set(uint8_t length);
+  };
+
+  payloadLength payloadLength;
+  crc crc;
+  lowDataRateOptimize lowDataRateOptimize;
 };
 
 #endif
