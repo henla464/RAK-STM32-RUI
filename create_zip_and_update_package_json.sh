@@ -4,7 +4,7 @@ set -e
 
 cd ..
 [ -e ~/.arduino15/package_rak_custom_rui_index.json ] && rm ~/.arduino15/package_rak_custom_rui_index.json
-[ -e ~/.arduino15/packages/rak_rui_wiroc ] && rm -r ~/.arduino15/packages/rak_rui_wiroc
+[ -e ~/.arduino15/packages/rak_rui_wiroc ] && rm -rf ~/.arduino15/packages/rak_rui_wiroc
 [ -e ~/.arduino15/staging/packages/RAK-STM32-RUI.zip ] && rm ~/.arduino15/staging/packages/RAK-STM32-RUI.zip
 rm package_rak_custom_rui_index.json
 rm RAK-STM32-RUI.zip
