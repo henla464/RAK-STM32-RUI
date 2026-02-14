@@ -2019,49 +2019,6 @@ public:
   /*******************************************************************************/
   /*  WiRoc Custom Methods */
   /*******************************************************************************/
-
-  /**@par   Description
-     *      This api provides the way to P2P send data
-     *
-     * @ingroup P2P
-     * @par Syntax
-     *      api.lora.c_psend(length, payload,cad_enable)
-     *
-     * @param   length      the length of the payload
-     * @param   payload     the data send to the other device
-     * @param   bool        Channel Activity Detection enable
-     * @return  bool
-     * @retval  TRUE for sending data success
-     * @retval  FALSE for sending data failure
-     * @par         Example
-     * @verbatim
-       void setup()
-       {
-           Serial.begin(115200);
-
-           Serial.println("P2P Start");
-
-           Serial.printf("Set Node device work mode %s\r\n", api.lora.nwm.set() ? "Success" : "Fail");
-           Serial.printf("Set P2P mode frequency %s\r\n", api.lora.pfreq.set(868000000) ? "Success" : "Fail");
-           Serial.printf("Set P2P mode spreading factor %s\r\n", api.lora.psf.set(12) ? "Success" : "Fail");
-           Serial.printf("Set P2P mode bandwidth %s\r\n", api.lora.pbw.set(125) ? "Success" : "Fail");
-           Serial.printf("Set P2P mode code rate %s\r\n", api.lora.pcr.set(0) ? "Success" : "Fail");
-           Serial.printf("Set P2P mode preamble length %s\r\n", api.lora.ppl.set(8) ? "Success" : "Fail");
-           Serial.printf("Set P2P mode tx power %s\r\n", api.lora.ptp.set(22) ? "Success" : "Fail");
-       }
-
-       void loop()
-       {
-           uint8_t payload[] = "payload";
-           Serial.printf("P2P send %s\r\n", api.lora.c_psend(sizeof(payload), payload,true) == SENT_OK ? "Success" : "Fail");
-           Serial.printf("P2P send %s\r\n", api.lora.c_psend(sizeof(payload), payload,true) == CAD_DETECTED_BUSY ? "CAD Detected Busy" : "Other return value");
-           delay(5000);
-       }
-
-           @endverbatim
-     */
-  c_psend_return_status_type_t c_psend(uint8_t length, uint8_t *payload,bool cad_enable);
-
   class lowDataRateOptimize
   {
   public:

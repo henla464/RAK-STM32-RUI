@@ -48,8 +48,7 @@ LORA_P2P_STATUS_ST lora_p2p_status = {
     .isContinue = false,
     .isContinue_no_exit = false,
     .isContinue_compatible_tx = false,
-    .isCAD = false,
-    .isCADDone = false
+    .isCAD = false
 };
 
 static uint8_t lora_p2p_buf[255];

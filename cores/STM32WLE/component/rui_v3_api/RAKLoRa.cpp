@@ -498,34 +498,6 @@ bool RAKLoraP2P::registerPSendCADCallback(service_lora_p2p_send_CAD_cb_type call
     }
 }
 
-
-
-c_psend_return_status_type_t RAKLoraP2P::c_psend(uint8_t length, uint8_t *payload,bool cad_enable) {
-    if (SERVICE_LORAWAN == service_lora_p2p_get_nwm())
-    {
-        return SEND_FAILED;
-    }
-
-    if ((true == service_lora_p2p_get_crypto_enable()) && (length > 223))
-    {
-        return SEND_FAILED;
-    }
-    else if (length > 253)
-    {
-        return SEND_FAILED;
-    }
-
-    uint32_t send_status = service_lora_p2p_send(payload, length, cad_enable);
-
-    if (send_status == UDRV_RETURN_OK) {
-        return SENT_OK;
-    } else if (send_status == -UDRV_BUSY) {
-        return CAD_DETECTED_BUSY;
-    }
-
-    return SEND_FAILED;
-}
-
 bool RAKLoraP2P::lowDataRateOptimize::get() {
     return service_lora_p2p_get_low_datarate_optimize();
 }
