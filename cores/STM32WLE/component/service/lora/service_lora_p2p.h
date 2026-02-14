@@ -243,10 +243,6 @@ int32_t service_lora_p2p_set_CAD(bool enable);
 
 bool service_lora_p2p_get_radio_stat(void);
 
-int32_t service_lora_p2p_config2(void);
-
-int32_t service_lora_p2p_send2(uint8_t *p_data, uint8_t len, bool cad_enable);
-
 #ifdef __cplusplus
 }
 #endif
