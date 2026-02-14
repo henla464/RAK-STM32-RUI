@@ -14,13 +14,6 @@
 #include "service_battery.h"
 #include "service_lora_arssi.h"
 
-typedef enum
-{
-    SENT_OK = 0,
-    CAD_DETECTED_BUSY = 1,
-    SEND_FAILED = 2
-} c_psend_return_status_type_t;
-
 class RAKLoraP2P
 {
 public:

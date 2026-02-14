@@ -316,20 +316,20 @@ int32_t service_lora_p2p_config(void)
 
         udrv_serial_log_printf("SetTxConfig2 ptr: 0x%08lX\r\n",
                        (unsigned long)Radio.SetTxConfig2);
-        Radio.SetTxConfig2(MODEM_LORA, Powerdbm, 0, bandwidth,
+        Radio.SetTxConfig(MODEM_LORA, Powerdbm, 0, bandwidth,
                           Spreadfact, codingrate,
                           Preamlen, fix_length_payload,
-                          crcOn, 0, 0, iqinverted, timeOnAir,
-                          lowDatarateOptimize);
+                          crcOn, 0, 0, iqinverted, timeOnAir
+                          );
         udrv_serial_log_printf("SetRxConfig2 ptr: 0x%08lX\r\n",
                        (unsigned long)Radio.SetRxConfig2);
-        Radio.SetRxConfig2(MODEM_LORA, bandwidth, Spreadfact,
+        Radio.SetRxConfig(MODEM_LORA, bandwidth, Spreadfact,
                           codingrate, 0, Preamlen,
                           symbol_timeout, fix_length_payload,
-                          payloadLen, crcOn, 0, 0, iqinverted, rxContinuous,
-                          lowDatarateOptimize);
+                          payloadLen, crcOn, 0, 0, iqinverted, rxContinuous
+                          );
 
-        //Radio.SetMaxPayloadLength(MODEM_LORA, LORA_BUFFER_SIZE);
+        Radio.SetMaxPayloadLength(MODEM_LORA, LORA_BUFFER_SIZE);
         radio_set_syncword(syncword);
     }
 
