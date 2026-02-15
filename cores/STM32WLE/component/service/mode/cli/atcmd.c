@@ -101,7 +101,7 @@ const char *atcmd_err_tbl[] =
 	"OK",
 	"AT_ERROR",
 	"AT_PARAM_ERROR",
-	"AT_BUSY_ERROR",
+	"BU",       /* BUSY */
 	"AT_TEST_PARAM_OVERFLOW",
 	"AT_NO_CLASSB_ENABLE",
 	"AT_NO_NETWORK_JOINED",
@@ -109,6 +109,8 @@ const char *atcmd_err_tbl[] =
 	"AT_MODE_NO_SUPPORT",
 	"AT_COMMAND_NOT_FOUND",
 	"AT_UNSUPPORTED_BAND",
+    "EM", /* nothing to return*/
+    "",
 };
 
 at_cmd_info atcmd_info_tbl[] =

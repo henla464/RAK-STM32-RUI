@@ -732,7 +732,6 @@ void SUBGRF_SetModulationParams( ModulationParams_t *modulationParams )
         buf[1] = modulationParams->Params.LoRa.Bandwidth;
         buf[2] = modulationParams->Params.LoRa.CodingRate;
         buf[3] = modulationParams->Params.LoRa.LowDatarateOptimize;
-        udrv_serial_log_printf("SUBGRF_SetModulationParams -- %d", buf[3]);
         SUBGRF_WriteCommand( RADIO_SET_MODULATIONPARAMS, buf, n );
 
         break;

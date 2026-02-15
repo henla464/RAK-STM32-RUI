@@ -47,7 +47,7 @@ typedef enum AT_ERRNO_E_{
         AT_OK = 0,
         AT_ERROR,
         AT_PARAM_ERROR,
-        AT_BUSY_ERROR,
+        AT_BUSY_ERROR,  /* reuturn BU */
         AT_TEST_PARAM_OVERFLOW,
         AT_NO_CLASSB_ENABLE,
         AT_NO_NETWORK_JOINED,
@@ -55,6 +55,8 @@ typedef enum AT_ERRNO_E_{
         AT_MODE_NO_SUPPORT,
         AT_COMMAND_NOT_FOUND,
         AT_UNSUPPORTED_BAND,
+        AT_EMPTY,       /* return EM */
+        AT_NO_STATUS,  /*return "" */
 }AT_ERRNO_E;
 
 typedef struct _stParam

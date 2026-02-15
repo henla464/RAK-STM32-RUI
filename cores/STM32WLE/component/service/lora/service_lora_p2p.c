@@ -98,10 +98,13 @@ static void OnTxDone(void)
     {
         (*service_lora_p2p_send_callback)();
     }
-    if (SERVICE_LORA_P2P == service_lora_p2p_get_nwm())
-        udrv_serial_log_printf("+EVT:TXP2P DONE\r\n");
     else
-        udrv_serial_log_printf("+EVT:TXFSK DONE\r\n");
+    { 
+        if (SERVICE_LORA_P2P == service_lora_p2p_get_nwm())
+            udrv_serial_log_printf("+EVT:TXP2P DONE\r\n");
+        else
+            udrv_serial_log_printf("+EVT:TXFSK DONE\r\n");
+    }
 
 
     udrv_powersave_wake_unlock();   
@@ -141,13 +144,6 @@ static void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr)
     else
         memcpy(lora_p2p_buf, payload, size);
 
-    if (SERVICE_LORA_P2P == service_lora_p2p_get_nwm())
-        udrv_serial_log_printf("+EVT:RXP2P:%d:%d:", rssi, snr);
-    else
-        udrv_serial_log_printf("+EVT:RXFSK:%d:%d:", rssi, snr);
-    p2p_printf_hex(lora_p2p_buf, size);
-    udrv_serial_log_printf("\r\n");
-
     recv_data_pkg.Rssi = rssi;
     recv_data_pkg.Snr = snr;
     recv_data_pkg.BufferSize = size;
@@ -157,6 +153,13 @@ static void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr)
     if((*service_lora_p2p_recv_callback)!=NULL)
     {
         (*service_lora_p2p_recv_callback)(recv_data_pkg);
+    } else {
+        if (SERVICE_LORA_P2P == service_lora_p2p_get_nwm())
+            udrv_serial_log_printf("+EVT:RXP2P:%d:%d:", rssi, snr);
+        else
+            udrv_serial_log_printf("+EVT:RXFSK:%d:%d:", rssi, snr);
+        p2p_printf_hex(lora_p2p_buf, size);
+        udrv_serial_log_printf("\r\n");
     }
 
     if(lora_p2p_status.isContinue_no_exit  || lora_p2p_status.isContinue_compatible_tx)
@@ -190,15 +193,15 @@ static void OnRxTimeout(void)
         return;
     }
    
-    if (SERVICE_LORA_P2P == service_lora_p2p_get_nwm())
-        udrv_serial_log_printf("+EVT:RXP2P RECEIVE TIMEOUT\r\n");
-    else
-        udrv_serial_log_printf("+EVT:RXFSK RECEIVE TIMEOUT\r\n");
-
     recv_data_pkg.Status = LORA_P2P_RXTIMEOUT;
     if((*service_lora_p2p_recv_callback)!=NULL)
     {
         (*service_lora_p2p_recv_callback)(recv_data_pkg);
+    } else {
+        if (SERVICE_LORA_P2P == service_lora_p2p_get_nwm())
+            udrv_serial_log_printf("+EVT:RXP2P RECEIVE TIMEOUT\r\n");
+        else
+            udrv_serial_log_printf("+EVT:RXFSK RECEIVE TIMEOUT\r\n");
     }
     Radio.Standby();
     udrv_powersave_wake_unlock();
@@ -209,17 +212,18 @@ static void OnRxError(void)
     lora_p2p_status.isRadioBusy = false;
     lora_p2p_status.isContinue = false;
 
-    if (SERVICE_LORA_P2P == service_lora_p2p_get_nwm())
-        udrv_serial_log_printf("+EVT:RXP2P RECEIVE ERROR\r\n");
-    else
-        udrv_serial_log_printf("+EVT:RXFSK RECEIVE ERROR\r\n");
-
+    
     LORA_P2P_DEBUG("%s\r\n", __func__);
 
     recv_data_pkg.Status = LORA_P2P_RXERROR;
     if((*service_lora_p2p_recv_callback)!=NULL)
     {
         (*service_lora_p2p_recv_callback)(recv_data_pkg);
+    } else {
+        if (SERVICE_LORA_P2P == service_lora_p2p_get_nwm())
+            udrv_serial_log_printf("+EVT:RXP2P RECEIVE ERROR\r\n");
+        else
+            udrv_serial_log_printf("+EVT:RXFSK RECEIVE ERROR\r\n");
     }
 
     if(lora_p2p_status.isContinue_no_exit || lora_p2p_status.isContinue_compatible_tx )
@@ -314,19 +318,17 @@ int32_t service_lora_p2p_config(void)
         if( service_nvm_get_symbol_timeout_from_nvm() == 0)
             rxContinuous = true;
 
-        udrv_serial_log_printf("SetTxConfig ptr: 0x%08lX\r\n",
-                       (unsigned long)Radio.SetTxConfig);
         Radio.SetTxConfig(MODEM_LORA, Powerdbm, 0, bandwidth,
                           Spreadfact, codingrate,
                           Preamlen, fix_length_payload,
-                          crcOn, 0, 0, iqinverted, timeOnAir
+                          crcOn, 0, 0, iqinverted, timeOnAir,
+                          lowDatarateOptimize
                           );
-        udrv_serial_log_printf("SetRxConfig ptr: 0x%08lX\r\n",
-                       (unsigned long)Radio.SetRxConfig);
         Radio.SetRxConfig(MODEM_LORA, bandwidth, Spreadfact,
                           codingrate, 0, Preamlen,
                           symbol_timeout, fix_length_payload,
-                          payloadLen, crcOn, 0, 0, iqinverted, rxContinuous
+                          payloadLen, crcOn, 0, 0, iqinverted, rxContinuous,
+                          lowDatarateOptimize
                           );
 
         //Radio.SetMaxPayloadLength(MODEM_LORA, LORA_BUFFER_SIZE);
@@ -341,12 +343,12 @@ int32_t service_lora_p2p_config(void)
         Radio.SetTxConfig(MODEM_FSK, Powerdbm, deviation, bandwidth,
                           bitrate, codingrate,
                           Preamlen, LORA_FIX_LENGTH_PAYLOAD_ON,
-                          true, 0, 0, LORA_IQ_INVERSION_ON, timeOnAir);
+                          true, 0, 0, LORA_IQ_INVERSION_ON, timeOnAir, false);
 
         Radio.SetRxConfig(MODEM_FSK, bandwidth, bitrate,
                           codingrate, 0, Preamlen,
                           LORA_SYMBOL_TIMEOUT, LORA_FIX_LENGTH_PAYLOAD_ON,
-                          0, true, 0, 0, LORA_IQ_INVERSION_ON, true);
+                          0, true, 0, 0, LORA_IQ_INVERSION_ON, true, false);
 
         Radio.SetMaxPayloadLength(MODEM_LORA, LORA_BUFFER_SIZE);
     }

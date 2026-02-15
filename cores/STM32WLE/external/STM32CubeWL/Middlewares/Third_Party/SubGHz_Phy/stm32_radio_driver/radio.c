@@ -229,7 +229,7 @@ static void RadioSetRxConfig( RadioModems_t modem, uint32_t bandwidth,
                               uint16_t symbTimeout, bool fixLen,
                               uint8_t payloadLen,
                               bool crcOn, bool FreqHopOn, uint8_t HopPeriod,
-                              bool iqInverted, bool rxContinuous );
+                              bool iqInverted, bool rxContinuous, bool lowDatarateOptimize );
 
 /*!
  * \brief Sets the transmission parameters
@@ -270,7 +270,7 @@ static void RadioSetTxConfig( RadioModems_t modem, int8_t power, uint32_t fdev,
                               uint32_t bandwidth, uint32_t datarate,
                               uint8_t coderate, uint16_t preambleLen,
                               bool fixLen, bool crcOn, bool FreqHopOn,
-                              uint8_t HopPeriod, bool iqInverted, uint32_t timeout );
+                              uint8_t HopPeriod, bool iqInverted, uint32_t timeout, bool lowDatarateOptimize );
 
 /*!
  * \brief Checks if the given RF frequency is supported by the hardware
@@ -752,7 +752,7 @@ static bool RadioIsChannelFree( uint32_t freq, uint32_t rxBandwidth, int16_t rss
 
     // Set Rx bandwidth. Other parameters are not used.
     RadioSetRxConfig( MODEM_FSK, rxBandwidth, 600, 0, rxBandwidth, 3, 0, false,
-                      0, false, 0, 0, false, true );
+                      0, false, 0, 0, false, true, false );
     RadioRx( 0 );
 
     RADIO_DELAY_MS( RadioGetWakeupTime( ) );
@@ -800,9 +800,8 @@ static void RadioSetRxConfig( RadioModems_t modem, uint32_t bandwidth,
                               uint16_t symbTimeout, bool fixLen,
                               uint8_t payloadLen,
                               bool crcOn, bool freqHopOn, uint8_t hopPeriod,
-                              bool iqInverted, bool rxContinuous )
+                              bool iqInverted, bool rxContinuous, bool lowDatarateOptimize )
 {
-    udrv_serial_log_printf("== RadioSetRXConfig == ");
     uint8_t modReg;
     SubgRf.RxContinuous = rxContinuous;
     RFW_DeInit(); /* ST_WORKAROUND: Switch Off FwPacketDecoding by default */
@@ -916,13 +915,14 @@ static void RadioSetRxConfig( RadioModems_t modem, uint32_t bandwidth,
 
             //if( ( ( bandwidth == 0 ) && ( ( datarate == 11 ) || ( datarate == 12 ) ) ) ||
             //    ( ( bandwidth == 1 ) && ( datarate == 12 ) ) )
-            //{
+            if (lowDatarateOptimize)
+            {
                 SubgRf.ModulationParams.Params.LoRa.LowDatarateOptimize = 0x01;
-            //}
-            //else
-            //{
-            //    SubgRf.ModulationParams.Params.LoRa.LowDatarateOptimize = 0x00;
-            //}
+            }
+            else
+            {
+                SubgRf.ModulationParams.Params.LoRa.LowDatarateOptimize = 0x00;
+            }
 
             SubgRf.PacketParams.PacketType = PACKET_TYPE_LORA;
 
@@ -981,9 +981,8 @@ static void RadioSetTxConfig( RadioModems_t modem, int8_t power, uint32_t fdev,
                               uint32_t bandwidth, uint32_t datarate,
                               uint8_t coderate, uint16_t preambleLen,
                               bool fixLen, bool crcOn, bool freqHopOn,
-                              uint8_t hopPeriod, bool iqInverted, uint32_t timeout )
+                              uint8_t hopPeriod, bool iqInverted, uint32_t timeout, bool lowDatarateOptimize )
 {
-    udrv_serial_log_printf("== RadioSetTXConfig == ");
     RFW_DeInit(); /* ST_WORKAROUND: Switch Off FwPacketDecoding by default */
     switch( modem )
     {
@@ -1029,12 +1028,14 @@ static void RadioSetTxConfig( RadioModems_t modem, int8_t power, uint32_t fdev,
             //if( ( ( bandwidth == 0 ) && ( ( datarate == 11 ) || ( datarate == 12 ) ) ) ||
             //    ( ( bandwidth == 1 ) && ( datarate == 12 ) ) )
             //{
+            if (lowDatarateOptimize)
+            {
                 SubgRf.ModulationParams.Params.LoRa.LowDatarateOptimize = 0x01;
-            //}
-            //else
-            //{
-            //    SubgRf.ModulationParams.Params.LoRa.LowDatarateOptimize = 0x00;
-            //}
+            }
+            else
+            {
+                SubgRf.ModulationParams.Params.LoRa.LowDatarateOptimize = 0x00;
+            }
 
             SubgRf.PacketParams.PacketType = PACKET_TYPE_LORA;
 
