@@ -453,6 +453,7 @@ typedef enum
  */
 typedef enum
 {
+    LORA_CR_4_4                             = 0x00,
     LORA_CR_4_5                             = 0x01,
     LORA_CR_4_6                             = 0x02,
     LORA_CR_4_7                             = 0x03,

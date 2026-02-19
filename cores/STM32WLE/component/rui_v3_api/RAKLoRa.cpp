@@ -532,6 +532,22 @@ bool RAKLoraP2P::crc::set(bool crc_on) {
     }
 }
 
+bool RAKLoraP2P::rxgain::get() {
+    return service_lora_p2p_get_rxgain();
+}
+
+bool RAKLoraP2P::rxgain::set(bool rxgain) {
+    if (SERVICE_LORAWAN == service_lora_p2p_get_nwm())
+    {
+        return false;
+    }
+
+    if (service_lora_p2p_set_rxgain(rxgain) == UDRV_RETURN_OK) {
+        return true;
+    } else {
+        return false;
+    }
+}
 
 uint8_t RAKLoraP2P::payloadLength::get()
 {

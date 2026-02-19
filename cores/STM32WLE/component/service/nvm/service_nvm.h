@@ -126,6 +126,7 @@ typedef struct {
     bool iqinverted;
     bool low_datarate_optimize;
     bool crc_on;
+    bool rxgain;
     uint8_t payloadlen;
     uint32_t symbol_timeout;
     uint16_t syncword;
@@ -519,6 +520,10 @@ uint32_t service_nvm_set_low_datarate_optimize_to_nvm(bool low_datarate_optimize
 bool service_nvm_get_crc_on_from_nvm(void);
          
 uint32_t service_nvm_set_crc_on_to_nvm(bool crc_on);
+
+bool service_nvm_get_rxgain_from_nvm(void);
+
+uint32_t service_nvm_set_rxgain_to_nvm(bool rxgain);
 
 bool service_nvm_get_fix_length_payload_from_nvm(void);
 

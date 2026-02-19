@@ -71,6 +71,7 @@ typedef enum
  */
 typedef enum
 {
+    RADIO_LORA_CR_4_4                             = 0x00,
     RADIO_LORA_CR_4_5                             = 0x01,
     RADIO_LORA_CR_4_6                             = 0x02,
     RADIO_LORA_CR_4_7                             = 0x03,

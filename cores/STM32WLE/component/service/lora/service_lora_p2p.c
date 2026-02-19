@@ -63,6 +63,7 @@ SERVICE_LORA_WORK_MODE service_lora_p2p_get_nwm(void)
 {
     return service_nvm_get_nwm_from_nvm();
 }
+
 int32_t service_lora_p2p_set_nwm(SERVICE_LORA_WORK_MODE nwm)
 {
 
@@ -114,8 +115,12 @@ static void OnTxDone(void)
         //65533 needs to continue receiving after sending.
         lora_p2p_status.isRadioBusy = true;
         Radio.Standby();
-        Radio.Rx(0);  
-        
+        if (service_nvm_get_rxgain_from_nvm())
+        {
+            Radio.RxBoosted(0);
+        } else {
+            Radio.Rx(0);
+        }
         return ;
     }  
 }
@@ -521,7 +526,12 @@ int32_t service_lora_p2p_recv(uint32_t timeout)
         LORA_P2P_DEBUG("Radio rx continue.\r\n");
         service_lora_p2p_config();
         Radio.Standby();
-        Radio.Rx(0);  
+        if (service_nvm_get_rxgain_from_nvm())
+        {
+            Radio.RxBoosted(0);
+        } else {
+            Radio.Rx(0);
+        } 
         udrv_powersave_wake_lock();   
     }
     else if (timeout == 65534)
@@ -529,7 +539,12 @@ int32_t service_lora_p2p_recv(uint32_t timeout)
         lora_p2p_status.isContinue_no_exit = true;
         service_lora_p2p_config();
         Radio.Standby();
-        Radio.Rx(0); 
+        if (service_nvm_get_rxgain_from_nvm())
+        {
+            Radio.RxBoosted(0);
+        } else {
+            Radio.Rx(0);
+        }
         udrv_powersave_wake_lock();
     }
     else if (timeout == 65533)
@@ -537,13 +552,23 @@ int32_t service_lora_p2p_recv(uint32_t timeout)
         lora_p2p_status.isContinue_compatible_tx = true;
         service_lora_p2p_config();
         Radio.Standby();
-        Radio.Rx(0); 
+        if (service_nvm_get_rxgain_from_nvm())
+        {
+            Radio.RxBoosted(0);
+        } else {
+            Radio.Rx(0);
+        }
         udrv_powersave_wake_lock();
     }
     else
     {
         LORA_P2P_DEBUG("Start recv data\r\n");
-        Radio.Rx(timeout);
+        if (service_nvm_get_rxgain_from_nvm())
+        {
+            Radio.RxBoosted(timeout);
+        } else {
+            Radio.Rx(0);
+        }
         udrv_powersave_wake_lock();
     }
     return UDRV_RETURN_OK;
@@ -725,7 +750,7 @@ uint8_t service_lora_p2p_get_codingrate(void)
 
 int32_t service_lora_p2p_set_codingrate(uint8_t codingrate)
 {
-    if ((codingrate < 0) || (codingrate > 3))
+    if ((codingrate < 0) || (codingrate > 4))
         return -UDRV_WRONG_ARG;
 
     service_nvm_set_codingrate_to_nvm(codingrate);
@@ -736,7 +761,7 @@ int32_t service_lora_p2p_set_codingrate(uint8_t codingrate)
 
 int32_t service_lora_p2p_check_runtime_codingrate(uint8_t codingrate)
 {
-    if ((codingrate < 0) || (codingrate > 3))
+    if ((codingrate < 0) || (codingrate > 4))
         return -UDRV_WRONG_ARG;
 
     return UDRV_RETURN_OK;
@@ -1174,6 +1199,18 @@ int32_t service_lora_p2p_set_crcon(bool crcon)
 {
     uint32_t udrv_ret;
     udrv_ret = service_nvm_set_crc_on_to_nvm(crcon);
+    return udrv_ret;
+}
+
+bool service_lora_p2p_get_rxgain(void)
+{
+    return service_nvm_get_rxgain_from_nvm();
+}
+
+int32_t service_lora_p2p_set_rxgain(bool rxgain)
+{
+    uint32_t udrv_ret;
+    udrv_ret = service_nvm_set_rxgain_to_nvm(rxgain);
     return udrv_ret;
 }
 

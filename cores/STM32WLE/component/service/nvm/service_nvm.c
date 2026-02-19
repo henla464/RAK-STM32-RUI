@@ -1320,6 +1320,17 @@ uint32_t service_nvm_set_crc_on_to_nvm(bool crc_on)
     return udrv_flash_write(SERVICE_NVM_RUI_CONFIG_NVM_ADDR, sizeof(PRE_rui_cfg_t), (uint8_t *)&g_rui_cfg_t);
 }
 
+bool service_nvm_get_rxgain_from_nvm(void)
+{
+    return g_rui_cfg_t.g_rui_cfg_ex.rxgain;
+}
+         
+uint32_t service_nvm_set_rxgain_to_nvm(bool rxgain)
+{
+    g_rui_cfg_t.g_rui_cfg_ex.rxgain = rxgain;
+    return udrv_flash_write(SERVICE_NVM_RUI_CONFIG_NVM_ADDR, sizeof(PRE_rui_cfg_t), (uint8_t *)&g_rui_cfg_t);
+}
+
 uint16_t service_nvm_get_payloadlen_from_nvm (void) {
     return g_rui_cfg_t.g_rui_cfg_ex.payloadlen;
 }

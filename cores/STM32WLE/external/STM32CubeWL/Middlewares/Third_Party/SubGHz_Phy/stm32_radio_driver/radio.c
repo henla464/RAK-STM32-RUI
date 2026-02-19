@@ -1417,6 +1417,10 @@ static void RadioRxBoosted( uint32_t timeout )
         TimerStart( &RxTimeoutTimer );
     }
 
+    /* ST_WORKAROUND_BEGIN : Set the debug pin and update the radio switch */
+    /* Set DBG pin */
+    DBG_GPIO_RADIO_RX(SET);
+
     /* RF switch configuration */
     SUBGRF_SetSwitch(SubgRf.AntSwitchPaSelect, RFSWITCH_RX);
 

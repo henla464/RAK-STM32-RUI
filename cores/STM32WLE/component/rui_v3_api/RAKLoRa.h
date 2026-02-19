@@ -2137,6 +2137,69 @@ public:
     bool set(bool crc_on);
   };
 
+  class rxgain
+  {
+  public:
+    /**@par	Description
+	 *     	This api allows to get rxgain
+	 *
+	 * @par	Syntax
+	 *	api.lora.rxgain.get()
+	 *
+	 * @return  The RxGain value (true/false) 	
+
+	 * @par         Example
+         * @verbatim
+       void setup()
+       {
+           Serial.begin(115200);
+
+           Serial.printf("Set Node device work mode %s\r\n", api.lora.nwm.set() ? "Success" : "Fail");
+           Serial.printf("Set P2P mode RxGain %s\r\n", api.lora.rxgain.set(true) ? "Success" : "Fail");
+       }
+
+       void loop()
+       {
+           Serial.printf("P2P mode RxGain = %d\r\n", api.lora.rxgain.get());
+
+           delay(1000);
+       }
+
+           @endverbatim
+	 */
+    bool get();
+    /**@par	Description
+	 *     	This api allows to set P2P RxGain
+	 *
+	 * @par	Syntax
+	 *	api.lora.rxgain.set(value)
+	 *
+	 * @param	value	the P2P RxGain value (true/false)
+   * @return	bool
+	 * @retval	TRUE for setting P2P CRC success
+	 * @retval	FALSE for setting CRC failure
+	 * @par         Example
+         * @verbatim
+       void setup()
+       {
+           Serial.begin(115200);
+
+           Serial.printf("Set Node device work mode %s\r\n", api.lora.nwm.set() ? "Success" : "Fail");
+           Serial.printf("Set P2P RxGain %s\r\n", api.lora.rxgain.set(true) ? "Success" : "Fail");
+       }
+
+       void loop()
+       {
+           Serial.printf("P2P RxGain = %d\r\n", api.lora.rxgain.get());
+
+           delay(1000);
+       }
+
+           @endverbatim
+	 */
+    bool set(bool rxgain);
+  };
+
   class payloadLength
   {
   public:
@@ -2201,6 +2264,7 @@ public:
 
   payloadLength payloadLength;
   crc crc;
+  rxgain rxgain;
   lowDataRateOptimize lowDataRateOptimize;
 };
 

@@ -628,7 +628,8 @@ int At_P2p(SERIAL_PORT port, char *cmd, stParam *param)
         if ( spreading_factor < 5 || spreading_factor > 12)
             return AT_PARAM_ERROR;
 
-        if (coding_rate > 3)
+        // allow 0-4, 0 being no hamming codes
+        if (coding_rate > 4)
             return AT_PARAM_ERROR;
 
         if(preamble_length< 5 || preamble_length > 65535)
