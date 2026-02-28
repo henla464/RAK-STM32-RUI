@@ -26,6 +26,8 @@ typedef struct runtimeConfigP2P_s {
     bool low_data_rate_optimize;
     bool crc_on;
     bool rxgain;
+    bool drf1268dscompatmode;
+    bool sendack;
     uint8_t payload_len;
     bool fix_length_payload;
 } runtimeConfigP2P_t;

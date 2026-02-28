@@ -293,7 +293,7 @@ int32_t service_lora_p2p_config(void)
             bandwidth = (runtimeConfigP2P.fsk_rxbw >> 1);
         }
 
-        codingrate = runtimeConfigP2P.coding_rate + 1;
+        codingrate = runtimeConfigP2P.coding_rate;
     }
     else {
         Frequency = service_nvm_get_freq_from_nvm();
@@ -315,7 +315,7 @@ int32_t service_lora_p2p_config(void)
             bandwidth = (service_lora_p2p_get_bandwidth() >> 1);
         }
 
-        codingrate = service_nvm_get_codingrate_from_nvm() + 1;
+        codingrate = service_nvm_get_codingrate_from_nvm();
     }
 
     if (SERVICE_LORA_P2P == service_lora_p2p_get_nwm())
@@ -1211,6 +1211,30 @@ int32_t service_lora_p2p_set_rxgain(bool rxgain)
 {
     uint32_t udrv_ret;
     udrv_ret = service_nvm_set_rxgain_to_nvm(rxgain);
+    return udrv_ret;
+}
+
+bool service_lora_p2p_get_drf1268dscompatmode(void)
+{
+    return service_nvm_get_drf1268dscompatmode_from_nvm();
+}
+
+int32_t service_lora_p2p_set_drf1268dscompatmode(bool drf1268dscompatmode)
+{
+    uint32_t udrv_ret;
+    udrv_ret = service_nvm_set_drf1268dscompatmode_to_nvm(drf1268dscompatmode);
+    return udrv_ret;
+}
+
+bool service_lora_p2p_get_sendack(void)
+{
+    return service_nvm_get_sendack_from_nvm();
+}
+
+int32_t service_lora_p2p_set_sendack(bool sendack)
+{
+    uint32_t udrv_ret;
+    udrv_ret = service_nvm_set_sendack_to_nvm(sendack);
     return udrv_ret;
 }
 

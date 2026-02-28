@@ -1331,6 +1331,29 @@ uint32_t service_nvm_set_rxgain_to_nvm(bool rxgain)
     return udrv_flash_write(SERVICE_NVM_RUI_CONFIG_NVM_ADDR, sizeof(PRE_rui_cfg_t), (uint8_t *)&g_rui_cfg_t);
 }
 
+
+bool service_nvm_get_drf1268dscompatmode_from_nvm(void)
+{
+    return g_rui_cfg_t.g_rui_cfg_ex.drf1268dscompatmode;
+}
+         
+uint32_t service_nvm_set_drf1268dscompatmode_to_nvm(bool drf1268dscompatmode)
+{
+    g_rui_cfg_t.g_rui_cfg_ex.drf1268dscompatmode = drf1268dscompatmode;
+    return udrv_flash_write(SERVICE_NVM_RUI_CONFIG_NVM_ADDR, sizeof(PRE_rui_cfg_t), (uint8_t *)&g_rui_cfg_t);
+}
+
+bool service_nvm_get_sendack_from_nvm(void)
+{
+    return g_rui_cfg_t.g_rui_cfg_ex.sendack;
+}
+         
+uint32_t service_nvm_set_sendack_to_nvm(bool sendack)
+{
+    g_rui_cfg_t.g_rui_cfg_ex.sendack = sendack;
+    return udrv_flash_write(SERVICE_NVM_RUI_CONFIG_NVM_ADDR, sizeof(PRE_rui_cfg_t), (uint8_t *)&g_rui_cfg_t);
+}
+
 uint16_t service_nvm_get_payloadlen_from_nvm (void) {
     return g_rui_cfg_t.g_rui_cfg_ex.payloadlen;
 }

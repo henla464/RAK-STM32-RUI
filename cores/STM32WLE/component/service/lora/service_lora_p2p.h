@@ -220,6 +220,14 @@ bool service_lora_p2p_get_rxgain(void);
 
 int32_t service_lora_p2p_set_rxgain(bool rxgain);
 
+bool service_lora_p2p_get_drf1268dscompatmode(void);
+
+int32_t service_lora_p2p_set_drf1268dscompatmode(bool drf1268dscompatmode);
+
+bool service_lora_p2p_get_sendack(void);
+
+int32_t service_lora_p2p_set_sendack(bool sendack);
+
 uint8_t service_lora_p2p_get_payloadlen(void);
 
 int32_t service_lora_p2p_set_payloadlen(uint8_t payloadlen);
