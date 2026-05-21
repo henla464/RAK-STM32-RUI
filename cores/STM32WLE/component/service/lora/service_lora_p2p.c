@@ -112,15 +112,21 @@ static void OnTxDone(void)
 
     if(lora_p2p_status.isContinue_compatible_tx == true)
     {
+        //uint8_t rxgainvalue1 = Radio.Read( 0x08AC);
+        //udrv_serial_log_printf("rx gain 3 %d\r\n", rxgainvalue1);
         //65533 needs to continue receiving after sending.
         lora_p2p_status.isRadioBusy = true;
         Radio.Standby();
         if (service_nvm_get_rxgain_from_nvm())
         {
+            //udrv_serial_log_printf("rxBoosted 5\r\n");
             Radio.RxBoosted(0);
         } else {
+            //udrv_serial_log_printf("rx non boosted 5\r\n");
             Radio.Rx(0);
         }
+        uint8_t rxgainvalue4 = Radio.Read( 0x08AC);
+        //udrv_serial_log_printf("rx gain 4 %d\r\n", rxgainvalue4);
         return ;
     }  
 }
@@ -502,13 +508,15 @@ int32_t service_lora_p2p_recv(uint32_t timeout)
     if(timeout != 0 && ( lora_p2p_status.isContinue || lora_p2p_status.isContinue_no_exit
     || lora_p2p_status.isContinue_compatible_tx))
     {
-        udrv_serial_log_printf("P2P_RX_ON already\r\n");
+        //udrv_serial_log_printf("P2P_RX_ON already\r\n");
         return -UDRV_BUSY;
     }
 
 
     /* enter the receiving mode and set radio busy */
     lora_p2p_status.isRadioBusy = true;
+    //uint8_t rxgainvalue1 = Radio.Read( 0x08AC);
+    //udrv_serial_log_printf("rx gain 1 %d\r\n", rxgainvalue1);
 
     if (timeout == 0)
     {
@@ -528,8 +536,10 @@ int32_t service_lora_p2p_recv(uint32_t timeout)
         Radio.Standby();
         if (service_nvm_get_rxgain_from_nvm())
         {
+            //udrv_serial_log_printf("rxBoosted 1\r\n");
             Radio.RxBoosted(0);
         } else {
+            //udrv_serial_log_printf("rx not boosted 1\r\n");
             Radio.Rx(0);
         } 
         udrv_powersave_wake_lock();   
@@ -541,8 +551,10 @@ int32_t service_lora_p2p_recv(uint32_t timeout)
         Radio.Standby();
         if (service_nvm_get_rxgain_from_nvm())
         {
+            //udrv_serial_log_printf("rxBoosted 2\r\n");
             Radio.RxBoosted(0);
         } else {
+            //udrv_serial_log_printf("rx not boosted 2\r\n");
             Radio.Rx(0);
         }
         udrv_powersave_wake_lock();
@@ -554,8 +566,10 @@ int32_t service_lora_p2p_recv(uint32_t timeout)
         Radio.Standby();
         if (service_nvm_get_rxgain_from_nvm())
         {
+            //udrv_serial_log_printf("rxBoosted 3\r\n");
             Radio.RxBoosted(0);
         } else {
+            //udrv_serial_log_printf("rx not boosted 3\r\n");
             Radio.Rx(0);
         }
         udrv_powersave_wake_lock();
@@ -565,12 +579,16 @@ int32_t service_lora_p2p_recv(uint32_t timeout)
         LORA_P2P_DEBUG("Start recv data\r\n");
         if (service_nvm_get_rxgain_from_nvm())
         {
+            //udrv_serial_log_printf("rxBoosted 4\r\n");
             Radio.RxBoosted(timeout);
         } else {
-            Radio.Rx(0);
+            //udrv_serial_log_printf("rx not booasted 4\r\n");
+            Radio.Rx(timeout);
         }
         udrv_powersave_wake_lock();
     }
+    uint8_t rxgainvalue = Radio.Read( 0x08AC);
+    //udrv_serial_log_printf("rx gain 2 %d\r\n", rxgainvalue);
     return UDRV_RETURN_OK;
 }
 

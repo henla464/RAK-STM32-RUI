@@ -679,7 +679,10 @@ void SUBGRF_SetTxParams( uint8_t paSelect, int8_t power, RadioRampTimes_t rampTi
         {
             power = -9;
         }
-        SUBGRF_WriteRegister( REG_OCP, 0x38 ); // current max 160mA for the whole device
+        SUBGRF_WriteRegister( REG_OCP, 0x38 ); 
+        // 0x38=140mA, SX1268 doc says highest is 0x3F: 63 * 2.5mA = 157.5mA. 
+        // 0x3F doesn't increate power output to antenna
+        // (prev comment: current max 160mA for the whole device)
     }
     buf[0] = power;
     buf[1] = ( uint8_t )rampTime;
