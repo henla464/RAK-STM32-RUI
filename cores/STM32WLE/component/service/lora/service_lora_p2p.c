@@ -457,6 +457,18 @@ int32_t service_lora_p2p_send(uint8_t *p_data, uint8_t len, bool cad_enable)
         if(lora_p2p_status.isRadioBusy == false)
         {
             LORA_P2P_DEBUG("CAD: udrv_powersave_wake_unlock\r\n");
+            if (lora_p2p_status.isContinue_compatible_tx == true)
+            {
+                /* A refused frame must not cost us the receiver: in
+                 * continue-compatible mode (65533) there is no OnTxDone to
+                 * re-arm it, so the standby left by the CAD verdict would
+                 * otherwise keep us deaf until the next successful send. */
+                lora_p2p_status.isRadioBusy = true;
+                if (service_nvm_get_rxgain_from_nvm())
+                    Radio.RxBoosted(0);
+                else
+                    Radio.Rx(0);
+            }
             udrv_powersave_wake_unlock();
             return -UDRV_BUSY;
         }
