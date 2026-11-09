@@ -104,7 +104,7 @@ const char *atcmd_err_tbl[] =
 	"BU",       /* BUSY */
 	"AT_TEST_PARAM_OVERFLOW",
 	"AT_NO_CLASSB_ENABLE",
-	"AT_NO_NETWORK_JOINED",
+	"NN",       /* NO_NETWORK_JOINED -- short like BU; mesh: no address / no parent */
 	"AT_RX_ERROR",
 	"AT_MODE_NO_SUPPORT",
 	"AT_COMMAND_NOT_FOUND",
