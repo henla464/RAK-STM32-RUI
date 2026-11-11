@@ -1368,7 +1368,10 @@ static void RadioRx( uint32_t timeout )
     }
     else
     {
-      SUBGRF_SetDioIrqParams( IRQ_RX_DONE | IRQ_RX_TX_TIMEOUT | IRQ_CRC_ERROR | IRQ_HEADER_ERROR | IRQ_RX_DBG,
+      /* Global mask also latches SYNCWORD_VALID, which DIO1 does not raise:
+       * service_lora_p2p_send() reads it to tell "a frame is arriving" from
+       * "idle", so a send never aborts a reception. */
+      SUBGRF_SetDioIrqParams( IRQ_RX_DONE | IRQ_RX_TX_TIMEOUT | IRQ_CRC_ERROR | IRQ_HEADER_ERROR | IRQ_SYNCWORD_VALID | IRQ_RX_DBG,
                               IRQ_RX_DONE | IRQ_RX_TX_TIMEOUT | IRQ_CRC_ERROR | IRQ_HEADER_ERROR | IRQ_RX_DBG,
                               IRQ_RADIO_NONE,
                               IRQ_RADIO_NONE );
@@ -1406,7 +1409,10 @@ static void RadioRxBoosted( uint32_t timeout )
     }
     else
     {
-      SUBGRF_SetDioIrqParams( IRQ_RX_DONE | IRQ_RX_TX_TIMEOUT | IRQ_CRC_ERROR | IRQ_HEADER_ERROR | IRQ_RX_DBG,
+      /* Global mask also latches SYNCWORD_VALID, which DIO1 does not raise:
+       * service_lora_p2p_send() reads it to tell "a frame is arriving" from
+       * "idle", so a send never aborts a reception. */
+      SUBGRF_SetDioIrqParams( IRQ_RX_DONE | IRQ_RX_TX_TIMEOUT | IRQ_CRC_ERROR | IRQ_HEADER_ERROR | IRQ_SYNCWORD_VALID | IRQ_RX_DBG,
                               IRQ_RX_DONE | IRQ_RX_TX_TIMEOUT | IRQ_CRC_ERROR | IRQ_HEADER_ERROR | IRQ_RX_DBG,
                               IRQ_RADIO_NONE,
                               IRQ_RADIO_NONE );

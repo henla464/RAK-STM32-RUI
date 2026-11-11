@@ -427,6 +427,13 @@ int32_t service_lora_p2p_send(uint8_t *p_data, uint8_t len, bool cad_enable)
     if (lora_p2p_status.isRadioBusy == true && lora_p2p_status.isContinue_compatible_tx == false)
         return -UDRV_BUSY;
 
+    /* A sync word was detected and the frame has not finished (the HAL handler
+     * clears the whole IRQ register as soon as one does), so a reception is in
+     * flight right now and the Standby() below would throw it away.  Refuse
+     * instead: the frame stays in the caller's queue. */
+    if (SUBGRF_GetIrqStatus() & IRQ_SYNCWORD_VALID)
+        return -UDRV_BUSY;
+
     if (true == service_lora_p2p_get_crypto_enable())
         len = service_lora_p2p_encrpty(p_data, len, lora_p2p_buf);
     else
