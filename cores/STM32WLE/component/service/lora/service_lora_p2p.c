@@ -427,11 +427,12 @@ int32_t service_lora_p2p_send(uint8_t *p_data, uint8_t len, bool cad_enable)
     if (lora_p2p_status.isRadioBusy == true && lora_p2p_status.isContinue_compatible_tx == false)
         return -UDRV_BUSY;
 
-    /* A sync word was detected and the frame has not finished (the HAL handler
-     * clears the whole IRQ register as soon as one does), so a reception is in
-     * flight right now and the Standby() below would throw it away.  Refuse
-     * instead: the frame stays in the caller's queue. */
-    if (SUBGRF_GetIrqStatus() & IRQ_SYNCWORD_VALID)
+    /* A sync word was detected but the frame has not finished, so a reception is
+     * in flight right now and the Standby() below would throw it away.  Refuse
+     * instead: the frame stays in the caller's queue.  RX_DONE means the frame
+     * is the one being completed -- a send issued from inside the RX handler
+     * (the root's application ACK) is exactly that case, and must go out. */
+    if ((SUBGRF_GetIrqStatus() & (IRQ_SYNCWORD_VALID | IRQ_RX_DONE)) == IRQ_SYNCWORD_VALID)
         return -UDRV_BUSY;
 
     if (true == service_lora_p2p_get_crypto_enable())
